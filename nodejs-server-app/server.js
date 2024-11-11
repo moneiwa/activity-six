@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { db } = require('./controllers/db');  
+const { db } = require('./Controllers/db');  
 const { collection, getDocs, doc, addDoc, deleteDoc, updateDoc } = require('firebase/firestore');
 
 const app = express();
