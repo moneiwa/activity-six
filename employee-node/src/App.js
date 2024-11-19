@@ -22,7 +22,7 @@ const App = () => {
   const fetchEmployeesData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/employees'); 
+      const response = await axios.get('https://activity-six-backend.onrender.com/api/employees'); 
       setEmployees(response.data);
     } catch (error) {
       setError('Error fetching employees');
@@ -34,7 +34,7 @@ const App = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/employees/${id}`);
+      await axios.delete(`https://activity-six-backend.onrender.com/api/employees/${id}`);
       fetchEmployeesData();
     } catch (error) {
       console.error('Error deleting employee:', error);
@@ -45,7 +45,7 @@ const App = () => {
   const handleAddEmployee = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/employees', newEmployee);
+      await axios.post('https://activity-six-backend.onrender.com/api/employees', newEmployee);
       fetchEmployeesData();
       setNewEmployee({
         employeeId: '',
@@ -65,7 +65,7 @@ const App = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/employees/${editEmployee.id}`, editEmployee);
+      await axios.put(`https://activity-six-backend.onrender.com/api/employees/${editEmployee.id}`, editEmployee);
       fetchEmployeesData();
       setIsEditing(false);
     } catch (error) {
