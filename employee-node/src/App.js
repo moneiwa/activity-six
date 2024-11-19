@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import axios from 'axios';
+import './App.css';  
 
 const App = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [newEmployee, setNewEmployee] = useState({
+    employeeId: '',  
     name: '',
     surname: '',
     email: '',
@@ -14,14 +15,14 @@ const App = () => {
     employeePosition: '',
     image: '',
   });
-
   const [editEmployee, setEditEmployee] = useState(null);
-  const [isEditing, setIsEditing] = useState(false); 
+  const [isEditing, setIsEditing] = useState(false);
 
+  
   const fetchEmployeesData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/employees');
+      const response = await axios.get('http://localhost:5000/api/employees'); 
       setEmployees(response.data);
     } catch (error) {
       setError('Error fetching employees');
@@ -47,6 +48,7 @@ const App = () => {
       await axios.post('http://localhost:5000/api/employees', newEmployee);
       fetchEmployeesData();
       setNewEmployee({
+        employeeId: '',
         name: '',
         surname: '',
         email: '',
@@ -65,7 +67,7 @@ const App = () => {
     try {
       await axios.put(`http://localhost:5000/api/employees/${editEmployee.id}`, editEmployee);
       fetchEmployeesData();
-      setIsEditing(false); 
+      setIsEditing(false);
     } catch (error) {
       console.error('Error updating employee:', error);
       setError('Error updating employee');
@@ -73,12 +75,12 @@ const App = () => {
   };
 
   const handleEditClick = (employee) => {
-    setEditEmployee(employee); 
+    setEditEmployee(employee);
     setIsEditing(true);
   };
 
   const handleCancelEdit = () => {
-    setIsEditing(false); 
+    setIsEditing(false);
   };
 
   const handleInputChange = (e) => {
@@ -96,145 +98,80 @@ const App = () => {
   }, []);
 
   return (
-    <div>
+    <div className='app-container'>
       <h1>Employee List</h1>
 
       {loading && <p>Loading employees...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
 
       {!isEditing && (
-        <table border="1" cellPadding="10" cellSpacing="0" style={{ marginTop: '20px' }}>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Surname</th>
-              <th>Email</th>
-              <th>Phone Number</th>
-              <th>Employee Position</th>
-              <th>ID</th>
-              <th>Image</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {employees.length > 0 ? (
-              employees.map((employee, index) => (
-                <tr key={`${employee.id}-${index}`}>
-                  <td>{employee.name}</td>
-                  <td>{employee.surname}</td>
-                  <td>{employee.email}</td>
-                  <td>{employee.phoneNumber}</td>
-                  <td>{employee.employeePosition}</td>
-                  <td>{employee.id}</td>
-                  <td>
-                    {employee.image && (
-                      <img src={employee.image} alt="Employee" style={{ width: '100px', height: '100px' }} />
-                    )}
-                  </td>
-                  <td>
-                    <button onClick={() => handleDelete(employee.id)}>Delete</button>
-                    <button onClick={() => handleEditClick(employee)}>Update</button>
-                  </td>
-                </tr>
-              ))
-            ) : (
+        <div className="employee-table-container">
+          <table>
+            <thead>
               <tr>
-                <td colSpan="8" style={{ textAlign: 'center' }}>No employees found</td>
+                <th>Employee ID</th> 
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Employee Position</th>
+                <th>Image</th>
+                <th>Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      )}
-
-      {isEditing && (
-        <div className="list-form">
-          <h2>Edit Employee</h2>
-          <form onSubmit={handleUpdate}>
-            <div className="main-list">
-              <div className="form-container">
-                <label>
-                  Name:
-                  <input
-                    type="text"
-                    name="name"
-                    value={editEmployee.name}
-                    onChange={handleEditInputChange}
-                    required
-                  />
-                </label>
-                <label>
-                  Surname:
-                  <input
-                    type="text"
-                    name="surname"
-                    value={editEmployee.surname}
-                    onChange={handleEditInputChange}
-                    required
-                  />
-                </label>
-                <label>
-                  Email:
-                  <input
-                    type="email"
-                    name="email"
-                    value={editEmployee.email}
-                    onChange={handleEditInputChange}
-                    required
-                  />
-                </label>
-              </div>
-
-              <div className="co">
-                <label>
-                  Phone Number:
-                  <input
-                    type="text"
-                    name="phoneNumber"
-                    value={editEmployee.phoneNumber}
-                    onChange={handleEditInputChange}
-                    required
-                  />
-                </label>
-                <label>
-                  Employee Position:
-                  <input
-                    type="text"
-                    name="employeePosition"
-                    value={editEmployee.employeePosition}
-                    onChange={handleEditInputChange}
-                    required
-                  />
-                </label>
-                <label>
-                  Image URL (Optional):
-                  <input
-                    type="text"
-                    name="image"
-                    value={editEmployee.image || ''}
-                    onChange={handleEditInputChange}
-                  />
-                </label>
-              </div>
-            </div>
-            <button type="submit">Update Employee</button>
-            <button type="button" onClick={handleCancelEdit}>Cancel</button>
-          </form>
+            </thead>
+            <tbody>
+              {employees.length > 0 ? (
+                employees.map((employee) => (
+                  <tr key={employee.id}>
+                    <td>{employee.employeeId}</td> 
+                    <td>{employee.name}</td>
+                    <td>{employee.surname}</td>
+                    <td>{employee.email}</td>
+                    <td>{employee.phoneNumber}</td>
+                    <td>{employee.employeePosition}</td>
+                    <td>
+                      {employee.image && (
+                        <img src={employee.image} alt="Employee" className="employee-image" />
+                      )}
+                    </td>
+                    <td>
+                      <button className="delete-btn" onClick={() => handleDelete(employee.id)}>Delete</button>
+                      <button className="edit-btn" onClick={() => handleEditClick(employee)}>Update</button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" style={{ textAlign: 'center' }}>No employees found</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       )}
 
-    
-      <div className="list-form">
-        <h2>Add New Employee</h2>
-        <form onSubmit={handleAddEmployee}>
-          <div className="main-list">
-            <div className="form-container">
+      {isEditing && (
+        <div className="form-container">
+          <h2>Edit Employee</h2>
+          <form onSubmit={handleUpdate}>
+            <div className="form-fields">
+              <label>
+                Employee ID:
+                <input
+                  type="text"
+                  name="employeeId"
+                  value={editEmployee.employeeId}
+                  onChange={handleEditInputChange}
+                  required
+                />
+              </label>
               <label>
                 Name:
                 <input
                   type="text"
                   name="name"
-                  value={newEmployee.name}
-                  onChange={handleInputChange}
+                  value={editEmployee.name}
+                  onChange={handleEditInputChange}
                   required
                 />
               </label>
@@ -243,8 +180,8 @@ const App = () => {
                 <input
                   type="text"
                   name="surname"
-                  value={newEmployee.surname}
-                  onChange={handleInputChange}
+                  value={editEmployee.surname}
+                  onChange={handleEditInputChange}
                   required
                 />
               </label>
@@ -253,21 +190,18 @@ const App = () => {
                 <input
                   type="email"
                   name="email"
-                  value={newEmployee.email}
-                  onChange={handleInputChange}
+                  value={editEmployee.email}
+                  onChange={handleEditInputChange}
                   required
                 />
               </label>
-            </div>
-
-            <div className="co">
               <label>
                 Phone Number:
                 <input
                   type="text"
                   name="phoneNumber"
-                  value={newEmployee.phoneNumber}
-                  onChange={handleInputChange}
+                  value={editEmployee.phoneNumber}
+                  onChange={handleEditInputChange}
                   required
                 />
               </label>
@@ -276,8 +210,8 @@ const App = () => {
                 <input
                   type="text"
                   name="employeePosition"
-                  value={newEmployee.employeePosition}
-                  onChange={handleInputChange}
+                  value={editEmployee.employeePosition}
+                  onChange={handleEditInputChange}
                   required
                 />
               </label>
@@ -286,13 +220,96 @@ const App = () => {
                 <input
                   type="text"
                   name="image"
-                  value={newEmployee.image}
-                  onChange={handleInputChange}
+                  value={editEmployee.image || ''}
+                  onChange={handleEditInputChange}
                 />
               </label>
             </div>
+            <div className="form-buttons">
+              <button type="submit" className="submit-btn">Update Employee</button>
+              <button type="button" onClick={handleCancelEdit} className="cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      <div className="form-container">
+        <h2>Add New Employee</h2>
+        <form onSubmit={handleAddEmployee}>
+          <div className="form-fields">
+            <label>
+              Employee ID:
+              <input
+                type="text"
+                name="employeeId"
+                value={newEmployee.employeeId}
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+            <label>
+              Name:
+              <input
+                type="text"
+                name="name"
+                value={newEmployee.name}
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+            <label>
+              Surname:
+              <input
+                type="text"
+                name="surname"
+                value={newEmployee.surname}
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+            <label>
+              Email:
+              <input
+                type="email"
+                name="email"
+                value={newEmployee.email}
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+            <label>
+              Phone Number:
+              <input
+                type="text"
+                name="phoneNumber"
+                value={newEmployee.phoneNumber}
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+            <label>
+              Employee Position:
+              <input
+                type="text"
+                name="employeePosition"
+                value={newEmployee.employeePosition}
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+            <label>
+              Image URL (Optional):
+              <input
+                type="text"
+                name="image"
+                value={newEmployee.image}
+                onChange={handleInputChange}
+              />
+            </label>
           </div>
-          <button type="submit">Add Employee</button>
+          <div className="form-buttons">
+            <button type="submit" className="submit-btn">Add Employee</button>
+          </div>
         </form>
       </div>
     </div>
